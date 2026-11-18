@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COIL Entrepreneurship & Startup Sessions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a program handbook. Left-aligned header, week-by-week schedule as a timeline of cards, then a searchable team roster with a balance matrix. */
+:root{
+  --paper:#f4f6f5; --surface:#ffffff; --ink:#14211f; --muted:#5a6b68; --line:#d6dedc;
+  --accent:#0d5c5e; --accent-soft:#e1eeed; --saffron:#c9781a; --saffron-soft:#fbeedd;
+  --ph:#2f6fb3; --om:#0d5c5e; --in:#c9781a;
+  --ok:#2e7d4f; --ok-soft:#e3f2e8;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#0f1716; --surface:#162120; --ink:#e6eeec; --muted:#9db0ac; --line:#2a3a38;
+  --accent:#5fc0bd; --accent-soft:#1c3533; --saffron:#f0a54a; --saffron-soft:#3a2a16;
+  --ph:#79aee6; --om:#5fc0bd; --in:#f0a54a; --ok:#6fcf97; --ok-soft:#183026; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --paper:#0f1716; --surface:#162120; --ink:#e6eeec; --muted:#9db0ac; --line:#2a3a38;
+  --accent:#5fc0bd; --accent-soft:#1c3533; --saffron:#f0a54a; --saffron-soft:#3a2a16;
+  --ph:#79aee6; --om:#5fc0bd; --in:#f0a54a; --ok:#6fcf97; --ok-soft:#183026; color-scheme:dark;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 var(--body)}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--saffron);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+h1,h2,h3{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(28px,4.4vw,44px);font-weight:700}
+h2{font-size:26px;font-weight:700}
+h3{font-size:18px;font-weight:700}
+header.top{background:var(--surface);border-bottom:1px solid var(--line)}
+header .wrap{padding-top:32px;padding-bottom:24px;display:grid;gap:14px}
+.eyebrow{font-weight:700;color:var(--saffron);letter-spacing:.06em;text-transform:uppercase;font-size:13px}
+.lede{max-width:68ch;color:var(--muted);margin:0}
+.facts{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:6px}
+.fact b{display:block;font-family:var(--display);font-size:24px;font-variant-numeric:tabular-nums}
+.fact span{color:var(--muted);font-size:14px}
+nav.tabs{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto}
+nav.tabs a{padding:12px 12px;text-decoration:none;color:var(--muted);font-weight:600;white-space:nowrap;border-bottom:2px solid transparent}
+nav.tabs a:hover{color:var(--ink);border-color:var(--saffron)}
+section{padding:40px 0 8px}
+.sec-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 20px;margin-bottom:18px}
+.sec-head p{margin:0;color:var(--muted);max-width:70ch}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.panel p{margin:.4em 0}
+.cycle{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
+.cycle span{background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:13px;padding:4px 10px;border-radius:99px}
+.cycle i{color:var(--muted);font-style:normal}
+dl.kv{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:0}
+dl.kv dt{color:var(--muted)} dl.kv dd{margin:0;font-weight:600}
+/* schedule */
+.weeks{display:grid;gap:14px}
+.week{display:grid;grid-template-columns:120px 1fr;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.week.next{border-color:var(--saffron);box-shadow:0 0 0 1px var(--saffron)}
+.wdate{background:var(--accent-soft);padding:16px;display:flex;flex-direction:column;gap:4px}
+.wdate .wk{font-size:13px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+.wdate .d{font-family:var(--display);font-size:26px;font-weight:700;line-height:1}
+.wdate .dy{color:var(--muted);font-size:14px}
+.wbody{padding:16px 20px;display:grid;gap:12px}
+.wtitle{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.pill{font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px;text-transform:uppercase;letter-spacing:.04em}
+.pill.done{background:var(--ok-soft);color:var(--ok)}
+.pill.next{background:var(--saffron-soft);color:var(--saffron)}
+.pill.up{background:var(--accent-soft);color:var(--accent)}
+.stage{color:var(--saffron);font-weight:700;font-size:13px;letter-spacing:.05em}
+.times{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.times b{color:var(--ink)}
+.wcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px 20px}
+.wcols h4{margin:0 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.wcols ul{margin:0;padding-left:18px}
+.join{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;border-top:1px dashed var(--line);padding-top:12px;font-size:14px}
+.btn{font:600 14px var(--body);padding:7px 14px;border-radius:7px;border:1px solid var(--accent);background:var(--accent);color:var(--surface);text-decoration:none;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent)}
+.code{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--paper);border:1px solid var(--line);border-radius:5px;padding:2px 7px}
+/* assessment */
+.table-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);background:var(--paper)}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:center;font-variant-numeric:tabular-nums}
+.bar{height:8px;border-radius:4px;background:var(--accent);display:inline-block;vertical-align:middle;margin-right:8px}
+/* teams */
+.controls{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;align-items:center}
+.controls input,.controls select{font:15px var(--body);padding:9px 12px;border:1px solid var(--line);border-radius:7px;background:var(--surface);color:var(--ink);min-width:220px}
+.controls .count{color:var(--muted);font-size:14px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--muted)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.teams{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.team{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;gap:10px;align-content:start}
+.thead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.tno{font-family:var(--display);font-weight:700;color:var(--saffron);font-size:14px}
+.mix{display:flex;height:8px;border-radius:4px;overflow:hidden;background:var(--line)}
+.mixlabel{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.members{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.members li{display:grid;grid-template-columns:18px 1fr auto;gap:8px;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--line);font-size:15px}
+.members li:last-child{border-bottom:0}
+.members .idx{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+.members .tag{font-size:12px;font-weight:700;padding:1px 7px;border-radius:4px;white-space:nowrap}
+.members .spec{display:block;font-size:12px;color:var(--muted)}
+.members li.hit{background:var(--saffron-soft)}
+.tcopy{justify-self:start}
+.hidden{display:none!important}
+footer{padding:40px 0 60px;color:var(--muted);font-size:14px}
+@media (max-width:640px){
+  .week{grid-template-columns:1fr}
+  .wdate{flex-direction:row;align-items:baseline;gap:10px}
+  .controls input,.controls select{min-width:0;width:100%}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="eyebrow">COIL · Track 3 · Idea Generation to Business Plan</div>
+    <h1>Global TechVentures: 5-Week Entrepreneurship &amp; Startup Sessions</h1>
+    <p class="lede">A Collaborative Online International Learning program led by UTAS-Shinas, Oman, with partner institutions in Oman, the Philippines and India. Students work in mixed cross-border teams to take a startup idea from ideation to an investor-ready business plan and live pitch.</p>
+    <div class="facts">
+      <div class="fact"><b>5 weeks</b><span>17 Nov – 15 Dec 2026</span></div>
+      <div class="fact"><b>20 hours</b><span>10 live + 10 self-paced</span></div>
+      <div class="fact"><b id="f-students">223</b><span>registered students</span></div>
+      <div class="fact"><b id="f-teams">22</b><span>mixed teams</span></div>
+      <div class="fact"><b>7</b><span>institutions, 3 countries</span></div>
+    </div>
+  </div>
+</header>
+<nav class="tabs" aria-label="Sections">
+  <div class="wrap">
+    <a href="#overview">Overview</a><a href="#schedule">Schedule &amp; links</a><a href="#assessment">Deliverables</a><a href="#teams">Teams</a><a href="#balance">Team balance</a><a href="#notes">Student notes</a>
+  </div>
+</nav>
+
+<main class="wrap">
+<section id="overview">
+  <div class="sec-head"><h2>Program overview</h2></div>
+  <div class="grid2">
+    <div class="panel">
+      <h3>At a glance</h3>
+      <dl class="kv" style="margin-top:10px">
+        <dt>Lead institution</dt><dd>UTAS-Shinas, Oman</dd>
+        <dt>Live sessions</dt><dd>Tuesdays, 12:00 – 2:00 PM Oman time</dd>
+        <dt>Platform</dt><dd>Microsoft Teams + shared Google Drive</dd>
+        <dt>Audience</dt><dd>Engineering, IT and Business students</dd>
+        <dt>Final output</dt><dd>Business Model Canvas, feasibility note, business plan, 10-slide pitch</dd>
+      </dl>
+    </div>
+    <div class="panel">
+      <h3>The 5-stage COIL learning cycle</h3>
+      <p>Each week moves teams one stage forward, and each live session builds on the one before it.</p>
+      <div class="cycle"><span>Connect</span><i>→</i><span>Compare</span><i>→</i><span>Collaborate</span><i>→</i><span>Create</span><i>→</i><span>Communicate</span></div>
+      <p style="margin-top:12px">Every session runs the same rhythm: a short mini-lecture, a team breakout, a plenary or peer-review round, and a briefing on the week's self-paced work.</p>
+    </div>
+    <div class="panel">
+      <h3>Participating institutions</h3>
+      <div id="inst-list" style="margin-top:8px"></div>
+    </div>
+  </div>
+</section>
+
+<section id="schedule">
+  <div class="sec-head"><h2>Session schedule &amp; meeting links</h2><p>All sessions are on Tuesday, 12:00 – 2:00 PM Oman time. Local times for India and the Philippines are shown on each card.</p></div>
+  <div class="weeks" id="weeks"></div>
+</section>
+
+<section id="assessment">
+  <div class="sec-head"><h2>Deliverables &amp; assessment</h2><p>Team work is uploaded to the shared Google Drive folder each week. Weights follow the Track master assessment rubric.</p></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Week</th><th>Deliverable</th><th>Type</th><th>Rubric criterion</th><th>Weight</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>SCAMPER Startup Ideation Matrix (Activity 1.1)</td><td>Team</td><td>Idea Validation</td><td><span class="bar" style="width:45px"></span>15%</td></tr>
+        <tr><td class="num">1</td><td>Interdisciplinary Team Charter (Activity 1.2)</td><td>Team</td><td>Interdisciplinary Integration</td><td><span class="bar" style="width:30px"></span>10%</td></tr>
+        <tr><td class="num">2</td><td>Business Model Canvas Mapping Worksheet (Activity 2.1)</td><td>Team</td><td>Business Model</td><td><span class="bar" style="width:45px"></span>15%</td></tr>
+        <tr><td class="num">3</td><td>Financial Model &amp; Market Sizing Worksheet (Activity 3.1)</td><td>Team</td><td>Market &amp; Financial</td><td><span class="bar" style="width:60px"></span>20%</td></tr>
+        <tr><td class="num">4</td><td>Technical Feasibility &amp; Prototyping Roadmap (Activity 4.1)</td><td>Team</td><td>Technical</td><td><span class="bar" style="width:60px"></span>20%</td></tr>
+        <tr><td class="num">4–5</td><td>Master Business Plan + 10-slide investor pitch and live showcase</td><td>Team</td><td>Master Plan &amp; Pitch</td><td><span class="bar" style="width:60px"></span>20%</td></tr>
+        <tr><td class="num">5</td><td>Peer and Panel Evaluation Form (Activity 5.1)</td><td>Individual</td><td>Interdisciplinary Integration</td><td>(within 10%)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="color:var(--muted);font-size:14px">Week 5 awards: Best Technical Innovation, Most Investor-Ready Business Model, and Best Cross-Border Collaboration.</p>
+</section>
+
+<section id="teams">
+  <div class="sec-head"><h2>Mixed-institution teams</h2><p>Every team has members from the Philippines, Oman and India, with students from each institution spread as evenly as the numbers allow.</p></div>
+  <div class="controls">
+    
+    <input id="q" type="search" aria-label="Search students or teams" placeholder="Find a student or team name">
+    
+    <select id="inst" aria-label="Filter by institution"><option value="">All institutions</option></select>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="legend" id="legend" style="margin-bottom:14px"></div>
+  <div class="teams" id="teamgrid"></div>
+</section>
+
+<section id="balance">
+  <div class="sec-head"><h2>Team balance check</h2><p>Members per team from each institution. Totals at the bottom match the registration list after duplicates were removed.</p></div>
+  <div class="table-wrap"><table id="matrix"></table></div>
+</section>
+
+<section id="notes">
+  <div class="sec-head"><h2>Notes for students</h2></div>
+  <div class="grid2">
+    <div class="panel"><h3>Attend every session</h3><p>All registered students are strongly encouraged to attend each live session. Every session builds on the previous one, and active participation is essential.</p></div>
+    <div class="panel"><h3>Work as a team</h3><p>Each week your team completes activities based on the session topic and uploads them to the shared folder.</p>
+      <p><a class="btn" href="https://drive.google.com/drive/folders/1yd18ULdjAdVthh2fWDIrbKLIQi1hsw1R?usp=drive_link">Open the upload folder</a></p></div>
+    <div class="panel"><h3>Come prepared</h3><p>Be ready to discuss, share ideas and collaborate with peers from partner institutions. Cite a source and year for any market figure you use.</p></div>
+    <div class="panel"><h3>Questions</h3><p>Contact the UTAS-Shinas coordinator, Narsaiah Lakkavatri.</p>
+      <p>Email: <span class="code">narsaiah.lakkavatri@utas.edu.om</span><br>WhatsApp: <span class="code">+968 9748 0088</span></p></div>
+  </div>
+</section>
+</main>
+<footer class="wrap">COIL Entrepreneurship &amp; Startup Sessions · Lead institution UTAS-Shinas, Oman · Team list prepared from the Track 3 final participant list.</footer>
+
+<script>
+const TEAMS = [{"no": 1, "name": "Monsoon Makers", "m": [{"n": "Abarabar, Mayrelle E.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Biag, Christine Lyn D.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "De Dios, Kim Gerlie R.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "LapeÃ±a, Kim D.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Ramos, Mark Joshua D.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Tibayan, Kristine C.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Lyka Narvaez", "c": "Philippines", "i": "Bicol College", "s": "Not specified"}, {"n": "Mariam Salim Mohammed Al Hamdani", "c": "Oman", "i": "UTAS-Shinas", "s": "Business Studies"}, {"n": "Said Mohammed Abdallah Al-Ghaithi", "c": "Oman", "i": "UTAS-Shinas", "s": "Engineering"}, {"n": "Nandini Dhonde", "c": "India", "i": "Sanjivani University", "s": "Not specified"}, {"n": "Mridhul", "c": "India", "i": "IA School of Management Studies", "s": "Business Studies"}]}, {"no": 2, "name": "Dhow Ventures", "m": [{"n": "Abella, Ryza Mae B.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Buag, Charme Kaye D.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "De Ocampo, Giliane Lei I.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Laplana, Princess Jillian C.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Raymundo, Vanesa Mae L.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Tirsol, Gian Rose N.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Ric Gm Rubio", "c": "Philippines", "i": "Bicol College", "s": "Not specified"}, {"n": "Maryam Mubarak Mohammed Al Hadhrami", "c": "Oman", "i": "UTAS-Shinas", "s": "Business Studies"}, {"n": "Saif Abdullah Salim Al Sadi", "c": "Oman", "i": "UTAS-Shinas", "s": "Engineering"}, {"n": "Parth Sandeep Bansode", "c": "India", "i": "Sanjivani University", "s": "Not specified"}, {"n": "Nikhath Sufiya", "c": "India", "i": "IA School of Management Studies", "s": "Business Studies"}]}, {"no": 3, "name": "Bayanihan Builders", "m": [{"n": "Abellera, Joshua S.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Bumatay, Michaella V.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "De Vera, Kursten Mellaine DV.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Lebaste, Desamae L.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Rilloraza, Meriam T.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Valencia, Bea Lorraine C.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Wilmen A. Buban", "c": "Philippines", "i": "Bicol College", "s": "Not specified"}, {"n": "Mithaq Mohammed Khamis Al-Breiki", "c": "Oman", "i": "UTAS-Shinas", "s": "Business Studies"}, {"n": "Aalaa Asim Abdul Majeed Al Qasimi", "c": "Oman", "i": "UTAS-Shinas", "s": "Information Technology"}, {"n": "Patil Om Pankaj", "c": "India", "i": "Sanjivani University", "s": "Not specified"}, {"n": "Pavan Antony Raj", "c": "India", "i": "IA School of Management Studies", "s": "Business Studies"}]}, {"no": 4, "name": "Jugaad Junction", "m": [{"n": "Abuan, Marvelous Faith A", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Butay, Lea May J.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Devis, Frelyn S.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Lopez,Chritian G.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Rivera, Kate L.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Verceles, Angel Zaira N.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Alfrancis P. Luis", "c": "Philippines", "i": "Northwestern University", "s": "Business Studies"}, {"n": "Mohammed Ahmed Barman Al Sharqi", "c": "Oman", "i": "UTAS-Shinas", "s": "Business Studies"}, {"n": "Abdullah Tayyib Ishaq Sulaiman Al Farsi", "c": "Oman", "i": "UTAS-Shinas", "s": "Information Technology"}, {"n": "Piyush Kotkar", "c": "India", "i": "Sanjivani University", "s": "Not specified"}]}, {"no": 5, "name": "Frankincense Forge", "m": [{"n": "Acero, Kim Shiela F.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "CORPUZ, Charmaine Joy A.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Diones, Michaela M.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Lucas, Angela Mae C.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Robianes, Hazel Ann F.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Villamarzo Ferwin R", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Alicia Leigh A. Asarias", "c": "Philippines", "i": "Northwestern University", "s": "Business Studies"}, {"n": "Mohammed Badar Mohammed Al-Maktoumi", "c": "Oman", "i": "UTAS-Shinas", "s": "Business Studies"}, {"n": "Bedoor Saif Salim Al Kaabi", "c": "Oman", "i": "UTAS-Shinas", "s": "Information Technology"}, {"n": "Pranav Yogesh Gaikwad", "c": "India", "i": "Sanjivani University", "s": "Not specified"}]}, {"no": 6, "name": "Sampaguita Sparks", "m": [{"n": "Acoyong, John Kenneth C.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Cabading, Princes Ayen A.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Dispo, Keziah Gwyneth N.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Maguindra, Jhohannah Angeline G.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Sagun, Arthur John S.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Villanueva, Jhazel Jade R.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Ashera Onisse C. Acupido", "c": "Philippines", "i": "Northwestern University", "s": "Business Studies"}, {"n": "Mohammed Khalfan Al-maqbali", "c": "Oman", "i": "UTAS-Shinas", "s": "Business Studies"}, {"n": "Farah Ahmed Abdullah Al Saidi", "c": "Oman", "i": "UTAS-Shinas", "s": "Information Technology"}, {"n": "Rugved Santosh Kulkarni", "c": "India", "i": "Sanjivani University", "s": "Not specified"}]}, {"no": 7, "name": "Lotus Launchpad", "m": [{"n": "Agpaoa, Ariane Nicole R.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Cabanting, Princess Leanne G.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Docusin, Minche Mae M.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Manaois, Gin San R.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Saludares, Kia A.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Yu, Kirsten M.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Chanette Maris Lucero Llana", "c": "Philippines", "i": "Northwestern University", "s": "Business Studies"}, {"n": "Qusai Sulaiman Habib Al Naabi", "c": "Oman", "i": "UTAS-Shinas", "s": "Business Studies"}, {"n": "Fatema Masari Omer Al Maamari", "c": "Oman", "i": "UTAS-Shinas", "s": "Information Technology"}, {"n": "Saish Dinesh Shinde", "c": "India", "i": "Sanjivani University", "s": "Not specified"}]}, {"no": 8, "name": "Falcon Founders", "m": [{"n": "Alcantara, Janella Rose A.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Calub, Rolhen Henzel", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Domingo, Nick Jhon L.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Marron, Jamilla M.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Sandoval, Andrea D.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Zapanta, Benigno Jr. A.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Dharell Dwayne O. Andres", "c": "Philippines", "i": "Northwestern University", "s": "Business Studies"}, {"n": "Rayyan Yousuf Ali AL-Farsi", "c": "Oman", "i": "UTAS-Shinas", "s": "Business Studies"}, {"n": "Kholoud Khalid Nasser Said Al Maqbali", "c": "Oman", "i": "UTAS-Shinas", "s": "Information Technology"}, {"n": "Sakshi ramesh dhanawate", "c": "India", "i": "Sanjivani University", "s": "Not specified"}]}, {"no": 9, "name": "Spice Route Startups", "m": [{"n": "Alcantra, Jessica C.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Calub, Russel June R.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Dotimas, Czarel Angel Nicole F.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Mendioro, Aleah Joy G.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Sarmiento Henry J.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Aubrey Llander Bañares", "c": "Philippines", "i": "Bicol College", "s": "Not specified"}, {"n": "Henson A. Barbosa", "c": "Philippines", "i": "Northwestern University", "s": "Business Studies"}, {"n": "Saeed Abdullah Nasser Al-Fazari", "c": "Oman", "i": "UTAS-Shinas", "s": "Business Studies"}, {"n": "Laila Taeeb Khamis Al Handasi", "c": "Oman", "i": "UTAS-Shinas", "s": "Information Technology"}, {"n": "Sarthak Arun Jadhav", "c": "India", "i": "Sanjivani University", "s": "Not specified"}]}, {"no": 10, "name": "Pearl Pivot", "m": [{"n": "Alingod, James Vladhemir G.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Castillo, Ysa Marjorette M.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Elegado, Eudhel Chemhae A.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Mendoza, Ma. Andrea Mae C.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Serafica, Jay Ann Nicole V.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Candy E. Marvida", "c": "Philippines", "i": "Bicol College", "s": "Not specified"}, {"n": "Iris Janine Racelis", "c": "Philippines", "i": "Northwestern University", "s": "Business Studies"}, {"n": "Said Abdullah Hassan Al-Amri", "c": "Oman", "i": "UTAS-Shinas", "s": "Business Studies"}, {"n": "Mahra Awadh Obaid Al Kaabi", "c": "Oman", "i": "UTAS-Shinas", "s": "Information Technology"}, {"n": "Sarthak Badakh", "c": "India", "i": "Sanjivani University", "s": "Not specified"}]}, {"no": 11, "name": "Tarsier Tech", "m": [{"n": "Anca, Jonathan Michael A.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Castro, Frecelyn S.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Enrico, Louie Jell S.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Michael John R. Lubiano", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Sernadilla, Jules Wayne G.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Dandale N. Abiad", "c": "Philippines", "i": "Bicol College", "s": "Not specified"}, {"n": "Jhoelia Princess Ancheta", "c": "Philippines", "i": "Northwestern University", "s": "Business Studies"}, {"n": "Saja Rashid Ali Al Risi", "c": "Oman", "i": "UTAS-Shinas", "s": "Business Studies"}, {"n": "Maram Said Ali Al Hinai", "c": "Oman", "i": "UTAS-Shinas", "s": "Information Technology"}, {"n": "Siddhi Amol Gangarde", "c": "India", "i": "Sanjivani University", "s": "Not specified"}]}, {"no": 12, "name": "Coral Catalysts", "m": [{"n": "Aquino, Kim Cyrus M.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Cayabyab, Ashlee Kim L.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Enrico, Louie Jill S.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Morga, Trixie Ann T.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Sibayan, Daphene Shene M.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Ella Mae A. Lota", "c": "Philippines", "i": "Bicol College", "s": "Not specified"}, {"n": "Juneishel D. Agtang", "c": "Philippines", "i": "Northwestern University", "s": "Business Studies"}, {"n": "Teef Mohammed Subaa Al Hosni", "c": "Oman", "i": "UTAS-Shinas", "s": "Business Studies"}, {"n": "Mariyam Ahmed Salim Al Mushaifri", "c": "Oman", "i": "UTAS-Shinas", "s": "Information Technology"}, {"n": "Soham Prabhakar Kadu", "c": "India", "i": "Sanjivani University", "s": "Not specified"}]}, {"no": 13, "name": "Banyan Breakthrough", "m": [{"n": "Aquino, Mayomi F .", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Cayabyab, Maria Melmar A.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Ermita, Jullia Sophia B.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Obillo, Hermie Mae D.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Sison, Kristine Jane S.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Erica B. Milarpis", "c": "Philippines", "i": "Bicol College", "s": "Not specified"}, {"n": "Jyrah Kate S. Ventura", "c": "Philippines", "i": "Northwestern University", "s": "Business Studies"}, {"n": "Alayham Hilal Saif Al Ameiri", "c": "Oman", "i": "UTAS-Shinas", "s": "Engineering"}, {"n": "Maryam Hassan Issa Al Balushi", "c": "Oman", "i": "UTAS-Shinas", "s": "Information Technology"}, {"n": "Soham Vinit Baviskar", "c": "India", "i": "Sanjivani University", "s": "Not specified"}]}, {"no": 14, "name": "Oasis Innovators", "m": [{"n": "Augia, Reza Mae T.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Cena, Sheinda May M.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Estrada, Maria Faith S.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Orate, Chloe D.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Sison, Michelle T.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Ivy Rose O. Orbeta", "c": "Philippines", "i": "Bicol College", "s": "Not specified"}, {"n": "Kim Cyrille Vivit", "c": "Philippines", "i": "Northwestern University", "s": "Business Studies"}, {"n": "Almuayad Said Rashid Al Shidi", "c": "Oman", "i": "UTAS-Shinas", "s": "Engineering"}, {"n": "Maryam Mohammed Ali Al Badwawi", "c": "Oman", "i": "UTAS-Shinas", "s": "Information Technology"}, {"n": "Sourav Sheshrao Patil", "c": "India", "i": "Sanjivani University", "s": "Not specified"}]}, {"no": 15, "name": "Jeepney Jumpstart", "m": [{"n": "Ayson, Janica C.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Comilang, John Carlo E.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Felipe, Rose Anica R.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Orongan, Ayessa Mae D.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Solomon, Elyca Jayne E.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Jandy Tundag", "c": "Philippines", "i": "Bicol College", "s": "Not specified"}, {"n": "Kristiane Leigh S. Bueno", "c": "Philippines", "i": "Northwestern University", "s": "Business Studies"}, {"n": "Chahd Abdullah Sulaiman Al Balushi", "c": "Oman", "i": "UTAS-Shinas", "s": "Engineering"}, {"n": "Rahayif Ali Saif Al Sinani", "c": "Oman", "i": "UTAS-Shinas", "s": "Information Technology"}, {"n": "Tamanna Raju Shaikh", "c": "India", "i": "Sanjivani University", "s": "Not specified"}]}, {"no": 16, "name": "Dune Disruptors", "m": [{"n": "Bajo, Richian Joy I.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Contiling, Yelsha Lyn A.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Felix, Mariane Kimberly S.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Osian, Francel Anne M.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Soria, Hannah Mae A.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Jeorge M. Notario", "c": "Philippines", "i": "Bicol College", "s": "Not specified"}, {"n": "Kwain Zandrei B. Dela Cruz", "c": "Philippines", "i": "Northwestern University", "s": "Business Studies"}, {"n": "Gbr Khamis Mohammed Khalfan Al Badi", "c": "Oman", "i": "UTAS-Shinas", "s": "Engineering"}, {"n": "Rawdha Abdallah Ahmed Al-Kaabi", "c": "Oman", "i": "UTAS-Shinas", "s": "Information Technology"}, {"n": "Tejas Somnath Sonawane", "c": "India", "i": "Sanjivani University", "s": "Not specified"}]}, {"no": 17, "name": "Mango Moonshots", "m": [{"n": "Balazon, Jana Mae D.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Coral, Rhea Raven P.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Fernandez, Noreen C.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Padilla, Ehra Jhane M.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Soriano John Raider M", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "John Carlo L Contante", "c": "Philippines", "i": "Bicol College", "s": "Not specified"}, {"n": "Abdulaziz Ahmed Salim Al Abdel Salaam", "c": "Oman", "i": "UTAS-Shinas", "s": "Business Studies"}, {"n": "Hamza Khalifa Khamis Almukhaini", "c": "Oman", "i": "UTAS-Shinas", "s": "Engineering"}, {"n": "Shifaa Mohammed Said Al Maqbali", "c": "Oman", "i": "UTAS-Shinas", "s": "Information Technology"}, {"n": "Utkarsha Sandip Bhadakwade", "c": "India", "i": "Sanjivani University", "s": "Not specified"}]}, {"no": 18, "name": "Peacock Pioneers", "m": [{"n": "Balingue, Irish G.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Corbe, Jon Gabriel A.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Fernandez, Timothy Wyn M.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Palma, Jan Brylle B.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Suan, Loraine S.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "John Carlo T. Fulgencio", "c": "Philippines", "i": "Bicol College", "s": "Not specified"}, {"n": "Aysha Shaher Juma Alkaabi", "c": "Oman", "i": "UTAS-Shinas", "s": "Business Studies"}, {"n": "Jasem Mohammed Saif Al Isaee", "c": "Oman", "i": "UTAS-Shinas", "s": "Engineering"}, {"n": "Mariyam Mohammed Hamad Al.badi", "c": "Oman", "i": "Sohar University", "s": "Business Studies"}, {"n": "Vedika Pangavhane", "c": "India", "i": "Sanjivani University", "s": "Not specified"}]}, {"no": 19, "name": "Wadi Visionaries", "m": [{"n": "Bangayan, Athea Jade L.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Corbillon,Irrah Samantha N", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Granil, Princess Virgee C.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Palos, France Louie C.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Subalbaro, Leira Ashley B.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Jonnel B. Vigonte", "c": "Philippines", "i": "Bicol College", "s": "Not specified"}, {"n": "Hamed Shihab Shahdad Albalushi", "c": "Oman", "i": "UTAS-Shinas", "s": "Business Studies"}, {"n": "Khaled Abdulrahman Abdullah Al Shihhi", "c": "Oman", "i": "UTAS-Shinas", "s": "Engineering"}, {"n": "Abhijeet Sanjay Vetal", "c": "India", "i": "Sanjivani University", "s": "Not specified"}, {"n": "Yash Dhokne", "c": "India", "i": "Sanjivani University", "s": "Not specified"}]}, {"no": 20, "name": "Sinag Scale-ups", "m": [{"n": "Baquing, Ashley May S.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Dagdag, Emieliza C.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Hiloma, Hillary Merzed C.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Parayno, Katrina Angela E.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Sumalbag, Angel B.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Justin M. Longaza", "c": "Philippines", "i": "Bicol College", "s": "Not specified"}, {"n": "Hoor Badar Rashid Almakhmari", "c": "Oman", "i": "UTAS-Shinas", "s": "Business Studies"}, {"n": "Rashid Ali Rashid Al Roshdi", "c": "Oman", "i": "UTAS-Shinas", "s": "Engineering"}, {"n": "Atharva suresh dhawale", "c": "India", "i": "Sanjivani University", "s": "Not specified"}, {"n": "Abhishek R", "c": "India", "i": "IA School of Management Studies", "s": "Business Studies"}]}, {"no": 21, "name": "Chai & Kahwa Collective", "m": [{"n": "Bautista, Loiza A.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Danzil, Jillian Jade I.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Jimenez, Glandy G.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Pascua, Alyssa H.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Suniega, Angel Maye L.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Kathlyn Ann F. Maggay", "c": "Philippines", "i": "Bicol College", "s": "Not specified"}, {"n": "Ibrahim Abdul Rahman Ibrahim Al Shezawi", "c": "Oman", "i": "UTAS-Shinas", "s": "Business Studies"}, {"n": "Rawah Marhoun Said Mohammed Al-Maamari", "c": "Oman", "i": "UTAS-Shinas", "s": "Engineering"}, {"n": "Bhakti Ajay Kadam", "c": "India", "i": "Sanjivani University", "s": "Not specified"}, {"n": "Mohamed Fariz", "c": "India", "i": "IA School of Management Studies", "s": "Business Studies"}]}, {"no": 22, "name": "Bamboo Bridge Labs", "m": [{"n": "Benitez, Lorisse Jean G.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Daraguit, Danica A.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Lacerona, Karen G.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Peralta, John Paul N.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Tabolong, Rhea Mae Z.", "c": "Philippines", "i": "Urdaneta City University", "s": "Business Studies"}, {"n": "Kerby Dela Torre", "c": "Philippines", "i": "Bicol College", "s": "Not specified"}, {"n": "Iman Abdullah Salim Al Kaabi", "c": "Oman", "i": "UTAS-Shinas", "s": "Business Studies"}, {"n": "Razan Talal Hamed Al Ajmi", "c": "Oman", "i": "UTAS-Shinas", "s": "Engineering"}, {"n": "Janhvi Gawali", "c": "India", "i": "Sanjivani University", "s": "Not specified"}, {"n": "Mohammed Ameen", "c": "India", "i": "IA School of Management Studies", "s": "Business Studies"}]}];
+const INST = {
+  "Urdaneta City University":{c:"UCU",k:"ph"},
+  "Bicol College":{c:"BC",k:"ph"},
+  "Northwestern University":{c:"NWU",k:"ph"},
+  "UTAS-Shinas":{c:"UTAS",k:"om"},
+  "Sohar University":{c:"SoU",k:"om"},
+  "Sanjivani University":{c:"SU",k:"in"},
+  "IA School of Management Studies":{c:"IASMS",k:"in"}
+};
+const COUNTRY = {ph:"Philippines",om:"Oman",in:"India"};
+const WEEKS = [
+ {d:"2026-11-17",stage:"Connect",title:"Orientation, Interdisciplinary Integration & Ideation",
+  lecture:"Where Tech Meets Market: Cross-Border Ideation & the SCAMPER method",
+  live:["Joint kickoff and ecosystem overview","Breakout: SCAMPER ideation sprint, 3 problem–solution concepts","Plenary: each team pitches one problem statement"],
+  due:["SCAMPER Startup Ideation Matrix (1.1)","Team Charter (1.2) and shortlisted ideas brief"],
+  link:"https://teams.microsoft.com/meet/3653999056220974?p=1PaFGa72WcLFIp0UvK",id:"365 399 905 622 097 4",pw:"BB3Ug6D6"},
+ {d:"2026-11-24",stage:"Compare",title:"Idea Validation & Business Model Canvas",
+  lecture:"The 9 building blocks of the Business Model Canvas for tech ventures",
+  live:["Breakout: draft BMC and customer personas","Engineering maps resources and activities; Business maps segments, channels and revenue","Peer review swap between teams"],
+  due:["Business Model Canvas worksheet (2.1)","Customer discovery interviews in local markets"],
+  link:"https://teams.microsoft.com/meet/3554684400432735?p=tu5hVH3a2HIejWQnPT",id:"355 468 440 043 273 5",pw:"2K3Tm6HT"},
+ {d:"2026-12-01",stage:"Collaborate",title:"Market, Competitor & Financial Planning",
+  lecture:"Market sizing (TAM–SAM–SOM) and financial modeling for early-stage ventures",
+  live:["Breakout: financial and market sizing lab","Engineering defines COGS, bill of materials and hosting costs","Faculty coaching to stress-test unit economics"],
+  due:["Financial Model & Market Sizing worksheet (3.1)","1-year pro-forma and competitor benchmarking matrix"],
+  link:"https://teams.microsoft.com/meet/3795557288552286?p=g8dt72AkytAQhcQ5S3",id:"379 555 728 855 228 6",pw:"NN6Gi9sb"},
+ {d:"2026-12-08",stage:"Create",title:"Operations, Technology & Plan Compilation",
+  lecture:"Engineering feasibility, prototyping roadmaps and business plan synthesis",
+  live:["Breakout: prototype and plan assembly","Cross-institutional business plan review"],
+  due:["Technical Feasibility & Prototyping Roadmap (4.1)","Master Business Plan and 10-slide pitch deck"],
+  link:"https://teams.microsoft.com/meet/3681645926251859?p=EgMESrz1b0NiOHbiQ6",id:"368 164 592 625 185 9",pw:"ra6f6y7H"},
+ {d:"2026-12-15",stage:"Communicate",title:"Final Presentation & Investor Pitch",
+  lecture:"Pitching to international investors: narrative structure and technical clarity",
+  live:["Live pitch showcase: 7-minute pitch + 3-minute panel Q&A per team","Panel deliberation and venture awards","Program debrief and certification briefing"],
+  due:["Live pitch","Peer and Panel Evaluation Form (5.1)"],
+  link:"https://teams.microsoft.com/meet/3746250915816437?p=6zEnVGMx7n2fmMQ2rg",id:"374 625 091 581 643 7",pw:"jR72tP9c"}
+];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+function renderWeeks(){
+  // session ends 2:00 PM Oman (UTC+4) = 10:00 UTC
+  const now=Date.now(); let nextFound=false;
+  document.getElementById("weeks").innerHTML=WEEKS.map((w,i)=>{
+    const end=Date.parse(w.d+"T10:00:00Z");
+    let st="up",lab="Upcoming";
+    if(now>end){st="done";lab="Completed";} else if(!nextFound){st="next";lab="Next session";nextFound=true;}
+    const [y,m,d]=w.d.split("-");
+    return `<article class="week ${st==="next"?"next":""}">
+      <div class="wdate"><span class="wk">Week ${i+1}</span><span class="d">${MONTHS[+m-1]} ${+d}</span><span class="dy">Tuesday</span></div>
+      <div class="wbody">
+        <div class="wtitle"><span class="stage">${w.stage.toUpperCase()}</span><span class="pill ${st}">${lab}</span></div>
+        <h3>${esc(w.title)}</h3>
+        <div class="times"><span><b>Oman</b> 12:00 – 2:00 PM</span><span><b>India</b> 1:30 – 3:30 PM</span><span><b>Philippines</b> 4:00 – 6:00 PM</span></div>
+        <div class="wcols">
+          <div><h4>Mini-lecture</h4><div>${esc(w.lecture)}</div></div>
+          <div><h4>In the live session</h4><ul>${w.live.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+          <div><h4>Team deliverables</h4><ul>${w.due.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+        </div>
+        <div class="join">
+          <a class="btn" href="${w.link}">Join on Teams</a>
+          <span>Meeting ID <span class="code">${w.id}</span></span>
+          <span>Passcode <span class="code">${w.pw}</span></span>
+          <button class="btn ghost" type="button" data-copy="${esc(`Week ${i+1} — ${w.title}\n${MONTHS[+m-1]} ${+d}, Tuesday, 12:00–2:00 PM Oman time\nJoin: ${w.link}\nMeeting ID: ${w.id}\nPasscode: ${w.pw}`)}">Copy details</button>
+        </div>
+      </div></article>`;
+  }).join("");
+}
+
+function instBadge(i){const x=INST[i]||{c:i,k:"ph"};return `<span class="tag" style="color:var(--${x.k});background:color-mix(in srgb,var(--${x.k}) 14%,transparent)" title="${esc(i)}">${x.c}</span>`;}
+
+function renderInst(){
+  const cnt={};TEAMS.forEach(t=>t.m.forEach(p=>cnt[p.i]=(cnt[p.i]||0)+1));
+  const order=Object.keys(INST).filter(k=>cnt[k]);
+  document.getElementById("inst-list").innerHTML=`<table><tbody>${order.map(k=>`<tr><td>${instBadge(k)} ${esc(k)}</td><td>${COUNTRY[INST[k].k]}</td><td class="num">${cnt[k]}</td></tr>`).join("")}</tbody></table>`;
+  const sel=document.getElementById("inst");
+  order.forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=`${k} (${cnt[k]})`;sel.appendChild(o);});
+  document.getElementById("legend").innerHTML=Object.entries(COUNTRY).map(([k,v])=>`<span><span class="dot" style="background:var(--${k})"></span>${v}</span>`).join("")+`<span>Codes: ${order.map(k=>`${INST[k].c} = ${esc(k)}`).join(" · ")}</span>`;
+  const total=TEAMS.reduce((a,t)=>a+t.m.length,0);
+  document.getElementById("f-students").textContent=total;
+  document.getElementById("f-teams").textContent=TEAMS.length;
+  // matrix
+  const head=`<thead><tr><th>Team</th>${order.map(k=>`<th class="num" title="${esc(k)}">${INST[k].c}</th>`).join("")}<th class="num">Total</th></tr></thead>`;
+  const body=TEAMS.map(t=>{const c={};t.m.forEach(p=>c[p.i]=(c[p.i]||0)+1);return `<tr><td>${t.no}. ${esc(t.name)}</td>${order.map(k=>`<td class="num">${c[k]||"–"}</td>`).join("")}<td class="num"><b>${t.m.length}</b></td></tr>`}).join("");
+  const foot=`<tr><td><b>Total</b></td>${order.map(k=>`<td class="num"><b>${cnt[k]}</b></td>`).join("")}<td class="num"><b>${total}</b></td></tr>`;
+  document.getElementById("matrix").innerHTML=head+`<tbody>${body}${foot}</tbody>`;
+}
+
+function renderTeams(){
+  const q=document.getElementById("q").value.trim().toLowerCase();
+  const fi=document.getElementById("inst").value;
+  let shown=0;
+  document.getElementById("teamgrid").innerHTML=TEAMS.map(t=>{
+    const nameHit=q&&t.name.toLowerCase().includes(q);
+    const memHit=t.m.some(p=>p.n.toLowerCase().includes(q));
+    const instOk=!fi||t.m.some(p=>p.i===fi);
+    const vis=instOk&&(!q||nameHit||memHit);
+    if(vis)shown++;
+    const cc={ph:0,om:0,in:0};t.m.forEach(p=>cc[(INST[p.i]||{k:"ph"}).k]++);
+    const n=t.m.length;
+    const copy=`Team ${t.no}: ${t.name}\n`+t.m.map((p,i)=>`${i+1}. ${p.n} — ${p.i}`).join("\n");
+    return `<article class="team ${vis?"":"hidden"}">
+      <div class="thead"><div><div class="tno">TEAM ${String(t.no).padStart(2,"0")}</div><h3>${esc(t.name)}</h3></div><span class="mixlabel">${n} members</span></div>
+      <div><div class="mix" aria-hidden="true">${["ph","om","in"].map(k=>`<span style="width:${cc[k]/n*100}%;background:var(--${k})"></span>`).join("")}</div>
+      <div class="mixlabel" style="margin-top:4px">Philippines ${cc.ph} · Oman ${cc.om} · India ${cc.in}</div></div>
+      <ol class="members">${t.m.map((p,i)=>{const hit=(q&&p.n.toLowerCase().includes(q))||(fi&&p.i===fi);return `<li class="${hit?"hit":""}"><span class="idx">${i+1}</span><span>${esc(p.n)}${p.s!=="Not specified"?`<span class="spec">${esc(p.s)}</span>`:""}</span>${instBadge(p.i)}</li>`}).join("")}</ol>
+      <button class="btn ghost tcopy" type="button" data-copy="${esc(copy)}">Copy team list</button>
+    </article>`;
+  }).join("");
+  document.getElementById("count").textContent=`Showing ${shown} of ${TEAMS.length} teams`;
+}
+
+document.addEventListener("click",async e=>{
+  const b=e.target.closest("[data-copy]");if(!b)return;
+  const old=b.textContent;
+  try{await navigator.clipboard.writeText(b.dataset.copy);b.textContent="Copied";}
+  catch(err){b.textContent="Copy blocked: select the text instead";}
+  setTimeout(()=>b.textContent=old,1600);
+});
+document.getElementById("q").addEventListener("input",renderTeams);
+document.getElementById("inst").addEventListener("change",renderTeams);
+renderWeeks();renderInst();renderTeams();
+</script>
+</body>
+</html>
